@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  phone        String?
+  createdAt    DateTime      @default(now())
+  reservations Reservation[]
+}
+
+model Court {
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  description  String
+  lightsOn     Boolean       @default(false)
+  reservations Reservation[]
+}
+
+model Reservation {
+  id        String            @id @default(cuid())
+  courtId   Int
+  userId    String
+  startsAt  DateTime
+  endsAt    DateTime
+  players   Int               @default(4)
+  withLight Boolean           @default(false)
+  status    ReservationStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  court     Court             @relation(fields: [courtId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([courtId, startsAt])
+  @@index([userId, startsAt])
+}
