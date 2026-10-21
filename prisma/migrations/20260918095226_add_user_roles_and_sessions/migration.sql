@@ -1,0 +1,1 @@
+-- Intentionally empty: authentication changes are applied by the following migration.

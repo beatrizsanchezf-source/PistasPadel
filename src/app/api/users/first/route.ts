@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 
+/** Mantiene el endpoint de bootstrap retirado y responde siempre `410 Gone`. */
 export async function GET() {
-  const user = await prisma.user.findFirst({
-    orderBy: { createdAt: "asc" },
-    select: { name: true },
-  });
-
-  return NextResponse.json(user);
+  return NextResponse.json({ error: "Ruta eliminada." }, { status: 410 });
 }

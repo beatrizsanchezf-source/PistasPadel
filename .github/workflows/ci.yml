@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pistas_padel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d pistas_padel"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/pistas_padel?schema=public
+      ADMIN_EMAIL: admin@example.test
+      ADMIN_PASSWORD: ci-admin-password-with-more-than-12-chars
+      APP_URL: https://localhost:3000
+      RESEND_API_KEY: re_ci_placeholder
+      MAIL_FROM: Pistas Padel <onboarding@resend.dev>
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run db:deploy
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Create local HTTPS certificate for Playwright
+        run: |
+          mkdir -p certificates
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout certificates/localhost-key.pem -out certificates/localhost.pem -days 1 -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

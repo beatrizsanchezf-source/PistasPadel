@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth";
 
+/** Cambia el estado de iluminación de una pista; requiere rol `ADMIN`. */
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ courtId: string }> }) {
-  const { courtId } = await params;
-  const body = await request.json() as { lightsOn?: boolean };
+  try { await requireAdmin(); } catch { return NextResponse.json({ error: "Solo los administradores pueden controlar la iluminación." }, { status: 403 }); }
+  const { courtId: rawCourtId } = await params;
+  const courtId = Number(rawCourtId);
+  const body = await request.json().catch(() => null) as { lightsOn?: boolean } | null;
 
-  if (typeof body.lightsOn !== "boolean") return NextResponse.json({ error: "lightsOn debe ser booleano." }, { status: 400 });
+  if (!Number.isInteger(courtId) || !body || typeof body.lightsOn !== "boolean") return NextResponse.json({ error: "Pista o datos de iluminación no válidos." }, { status: 400 });
 
-  const court = await prisma.court.update({ where: { id: Number(courtId) }, data: { lightsOn: body.lightsOn } });
-  return NextResponse.json(court);
+  try { return NextResponse.json(await prisma.court.update({ where: { id: courtId }, data: { lightsOn: body.lightsOn } })); }
+  catch { return NextResponse.json({ error: "La pista no existe." }, { status: 404 }); }
 }

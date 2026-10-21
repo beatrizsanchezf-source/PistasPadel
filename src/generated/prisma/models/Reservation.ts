@@ -45,6 +45,7 @@ export type ReservationMinAggregateOutputType = {
   players: number | null
   withLight: boolean | null
   status: $Enums.ReservationStatus | null
+  notes: string | null
   createdAt: Date | null
 }
 
@@ -57,6 +58,7 @@ export type ReservationMaxAggregateOutputType = {
   players: number | null
   withLight: boolean | null
   status: $Enums.ReservationStatus | null
+  notes: string | null
   createdAt: Date | null
 }
 
@@ -69,6 +71,7 @@ export type ReservationCountAggregateOutputType = {
   players: number
   withLight: number
   status: number
+  notes: number
   createdAt: number
   _all: number
 }
@@ -93,6 +96,7 @@ export type ReservationMinAggregateInputType = {
   players?: true
   withLight?: true
   status?: true
+  notes?: true
   createdAt?: true
 }
 
@@ -105,6 +109,7 @@ export type ReservationMaxAggregateInputType = {
   players?: true
   withLight?: true
   status?: true
+  notes?: true
   createdAt?: true
 }
 
@@ -117,6 +122,7 @@ export type ReservationCountAggregateInputType = {
   players?: true
   withLight?: true
   status?: true
+  notes?: true
   createdAt?: true
   _all?: true
 }
@@ -216,6 +222,7 @@ export type ReservationGroupByOutputType = {
   players: number
   withLight: boolean
   status: $Enums.ReservationStatus
+  notes: string | null
   createdAt: Date
   _count: ReservationCountAggregateOutputType | null
   _avg: ReservationAvgAggregateOutputType | null
@@ -251,6 +258,7 @@ export type ReservationWhereInput = {
   players?: Prisma.IntFilter<"Reservation"> | number
   withLight?: Prisma.BoolFilter<"Reservation"> | boolean
   status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
+  notes?: Prisma.StringNullableFilter<"Reservation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   court?: Prisma.XOR<Prisma.CourtScalarRelationFilter, Prisma.CourtWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -265,6 +273,7 @@ export type ReservationOrderByWithRelationInput = {
   players?: Prisma.SortOrder
   withLight?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   court?: Prisma.CourtOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -282,6 +291,7 @@ export type ReservationWhereUniqueInput = Prisma.AtLeast<{
   players?: Prisma.IntFilter<"Reservation"> | number
   withLight?: Prisma.BoolFilter<"Reservation"> | boolean
   status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
+  notes?: Prisma.StringNullableFilter<"Reservation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   court?: Prisma.XOR<Prisma.CourtScalarRelationFilter, Prisma.CourtWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -296,6 +306,7 @@ export type ReservationOrderByWithAggregationInput = {
   players?: Prisma.SortOrder
   withLight?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ReservationCountOrderByAggregateInput
   _avg?: Prisma.ReservationAvgOrderByAggregateInput
@@ -316,6 +327,7 @@ export type ReservationScalarWhereWithAggregatesInput = {
   players?: Prisma.IntWithAggregatesFilter<"Reservation"> | number
   withLight?: Prisma.BoolWithAggregatesFilter<"Reservation"> | boolean
   status?: Prisma.EnumReservationStatusWithAggregatesFilter<"Reservation"> | $Enums.ReservationStatus
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Reservation"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
 }
 
@@ -326,6 +338,7 @@ export type ReservationCreateInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
   court: Prisma.CourtCreateNestedOneWithoutReservationsInput
   user: Prisma.UserCreateNestedOneWithoutReservationsInput
@@ -340,6 +353,7 @@ export type ReservationUncheckedCreateInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
 }
 
@@ -350,6 +364,7 @@ export type ReservationUpdateInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   court?: Prisma.CourtUpdateOneRequiredWithoutReservationsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutReservationsNestedInput
@@ -364,6 +379,7 @@ export type ReservationUncheckedUpdateInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -376,6 +392,7 @@ export type ReservationCreateManyInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
 }
 
@@ -386,6 +403,7 @@ export type ReservationUpdateManyMutationInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -398,6 +416,7 @@ export type ReservationUncheckedUpdateManyInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -420,6 +439,7 @@ export type ReservationCountOrderByAggregateInput = {
   players?: Prisma.SortOrder
   withLight?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -437,6 +457,7 @@ export type ReservationMaxOrderByAggregateInput = {
   players?: Prisma.SortOrder
   withLight?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -449,6 +470,7 @@ export type ReservationMinOrderByAggregateInput = {
   players?: Prisma.SortOrder
   withLight?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -552,6 +574,7 @@ export type ReservationCreateWithoutUserInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
   court: Prisma.CourtCreateNestedOneWithoutReservationsInput
 }
@@ -564,6 +587,7 @@ export type ReservationUncheckedCreateWithoutUserInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
 }
 
@@ -605,6 +629,7 @@ export type ReservationScalarWhereInput = {
   players?: Prisma.IntFilter<"Reservation"> | number
   withLight?: Prisma.BoolFilter<"Reservation"> | boolean
   status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
+  notes?: Prisma.StringNullableFilter<"Reservation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
 }
 
@@ -615,6 +640,7 @@ export type ReservationCreateWithoutCourtInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutReservationsInput
 }
@@ -627,6 +653,7 @@ export type ReservationUncheckedCreateWithoutCourtInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
 }
 
@@ -664,6 +691,7 @@ export type ReservationCreateManyUserInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
 }
 
@@ -674,6 +702,7 @@ export type ReservationUpdateWithoutUserInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   court?: Prisma.CourtUpdateOneRequiredWithoutReservationsNestedInput
 }
@@ -686,6 +715,7 @@ export type ReservationUncheckedUpdateWithoutUserInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -697,6 +727,7 @@ export type ReservationUncheckedUpdateManyWithoutUserInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -708,6 +739,7 @@ export type ReservationCreateManyCourtInput = {
   players?: number
   withLight?: boolean
   status?: $Enums.ReservationStatus
+  notes?: string | null
   createdAt?: Date | string
 }
 
@@ -718,6 +750,7 @@ export type ReservationUpdateWithoutCourtInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutReservationsNestedInput
 }
@@ -730,6 +763,7 @@ export type ReservationUncheckedUpdateWithoutCourtInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -741,6 +775,7 @@ export type ReservationUncheckedUpdateManyWithoutCourtInput = {
   players?: Prisma.IntFieldUpdateOperationsInput | number
   withLight?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -755,6 +790,7 @@ export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   players?: boolean
   withLight?: boolean
   status?: boolean
+  notes?: boolean
   createdAt?: boolean
   court?: boolean | Prisma.CourtDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -769,6 +805,7 @@ export type ReservationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   players?: boolean
   withLight?: boolean
   status?: boolean
+  notes?: boolean
   createdAt?: boolean
   court?: boolean | Prisma.CourtDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -783,6 +820,7 @@ export type ReservationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   players?: boolean
   withLight?: boolean
   status?: boolean
+  notes?: boolean
   createdAt?: boolean
   court?: boolean | Prisma.CourtDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -797,10 +835,11 @@ export type ReservationSelectScalar = {
   players?: boolean
   withLight?: boolean
   status?: boolean
+  notes?: boolean
   createdAt?: boolean
 }
 
-export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "courtId" | "userId" | "startsAt" | "endsAt" | "players" | "withLight" | "status" | "createdAt", ExtArgs["result"]["reservation"]>
+export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "courtId" | "userId" | "startsAt" | "endsAt" | "players" | "withLight" | "status" | "notes" | "createdAt", ExtArgs["result"]["reservation"]>
 export type ReservationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   court?: boolean | Prisma.CourtDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -829,6 +868,7 @@ export type $ReservationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     players: number
     withLight: boolean
     status: $Enums.ReservationStatus
+    notes: string | null
     createdAt: Date
   }, ExtArgs["result"]["reservation"]>
   composites: {}
@@ -1263,6 +1303,7 @@ export interface ReservationFieldRefs {
   readonly players: Prisma.FieldRef<"Reservation", 'Int'>
   readonly withLight: Prisma.FieldRef<"Reservation", 'Boolean'>
   readonly status: Prisma.FieldRef<"Reservation", 'ReservationStatus'>
+  readonly notes: Prisma.FieldRef<"Reservation", 'String'>
   readonly createdAt: Prisma.FieldRef<"Reservation", 'DateTime'>
 }
     
