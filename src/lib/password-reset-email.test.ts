@@ -46,7 +46,8 @@ describe("configuración del correo de restablecimiento", () => {
     const error = await sendPasswordResetEmail("user@example.test", "https://example.test/reset").catch((caught: unknown) => caught);
 
     expect(error).toBeInstanceOf(Error);
-    expect((error as Error).message).toContain("403 - The sender domain is not verified.");
+    expect((error as Error).message).toBe("Resend rejected request (403).");
+    expect((error as Error).message).not.toContain("not verified");
     expect((error as Error).message).not.toContain("secret-test-key");
     const requestOptions = vi.mocked(fetch).mock.calls[0][1];
     expect(JSON.parse(String(requestOptions?.body)).from).toBe(process.env.MAIL_FROM);

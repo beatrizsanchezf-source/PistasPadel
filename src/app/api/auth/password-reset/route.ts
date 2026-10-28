@@ -3,19 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getMissingPasswordResetEmailConfig, sendPasswordResetEmail } from "@/lib/password-reset-email";
 import { errorResponse, isRecord, readJson } from "@/lib/http";
+import { isValidEmail, normalizeEmail } from "@/lib/user-validation";
+import { logSanitizedError } from "@/lib/safe-log";
 
 const tokenLifetimeMs = 30 * 60 * 1000;
 const acceptedMessage = "Si el correo está asociado a una cuenta, recibirás un enlace para restablecer la contraseña.";
-
-function isValidEmail(value: string) {
-  const [localPart, domain, ...extra] = value.trim().split("@");
-  return extra.length === 0
-    && Boolean(localPart && domain)
-    && localPart.length <= 64
-    && domain.length <= 253
-    && domain.includes(".")
-    && !/\s/.test(value);
-}
 
 export async function POST(request: NextRequest) {
   const body = await readJson<unknown>(request);
@@ -33,11 +25,12 @@ export async function POST(request: NextRequest) {
     return errorResponse("La URL de la aplicación no está configurada correctamente.", 503);
   }
 
-  const email = body.email.trim().toLowerCase();
+  const email = normalizeEmail(body.email);
   const user = await prisma.user.findUnique({ where: { email }, select: { id: true, email: true } });
   if (!user) return NextResponse.json({ message: acceptedMessage }, { status: 202 });
 
   const now = new Date();
+  await prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lte: now } } });
   const recentToken = await prisma.passwordResetToken.findFirst({
     where: { userId: user.id, createdAt: { gt: new Date(now.getTime() - 60_000) } },
     select: { tokenHash: true },
@@ -55,7 +48,7 @@ export async function POST(request: NextRequest) {
     await sendPasswordResetEmail(user.email, appUrl.toString());
   } catch (error) {
     await prisma.passwordResetToken.deleteMany({ where: { tokenHash } });
-    console.error("No se pudo entregar un correo de restablecimiento.", error);
+    logSanitizedError("No se pudo entregar un correo de restablecimiento.", error);
   }
 
   return NextResponse.json({ message: acceptedMessage }, { status: 202 });

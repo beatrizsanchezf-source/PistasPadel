@@ -48,7 +48,7 @@ describe("POST /api/auth/password-reset/confirm", () => {
     const request = new NextRequest("http://localhost/api/auth/password-reset/confirm", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: "reset-token", password: "una-clave-nueva-segura" }),
+      body: JSON.stringify({ token: "A".repeat(43), password: "una-clave-nueva-segura" }),
     });
 
     const response = await POST(request);
@@ -65,7 +65,7 @@ describe("POST /api/auth/password-reset/confirm", () => {
     const request = new NextRequest("http://localhost/api/auth/password-reset/confirm", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: "invalid-token", password: "una-clave-nueva-segura" }),
+      body: JSON.stringify({ token: "B".repeat(43), password: "una-clave-nueva-segura" }),
     });
 
     const response = await POST(request);

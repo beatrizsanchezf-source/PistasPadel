@@ -66,3 +66,14 @@ test("abre el formulario de cambio desde un token y lo retira de la URL", async 
 
   await expect(page.getByText("La contraseña se ha cambiado. Ya puedes iniciar sesión.")).toBeVisible();
 });
+
+test("permite completar el acceso navegando con teclado", async ({ page }) => {
+  await mockApi(page);
+  await page.goto("/");
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Correo electrónico")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Contraseña")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Entrar" })).toBeFocused();
+});

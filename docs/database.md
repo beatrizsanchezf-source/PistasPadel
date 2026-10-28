@@ -19,7 +19,11 @@ Sesión autenticada con token almacenado como hash, usuario asociado y fecha de 
 
 ### `LoginAttempt`
 
-Contador de intentos fallidos por correo, con ventana de reinicio y fecha de actualización.
+Contador temporal por email normalizado para limitar intentos fallidos. Los registros con `resetAt` vencido se eliminan durante login o mediante `npm run db:cleanup-expired`.
+
+### `PasswordResetToken`
+
+Token de un solo uso para recuperar la cuenta. Solo guarda el hash SHA-256, el usuario asociado y su fecha de expiración; nunca el token que se envía por correo. Los tokens expirados se limpian durante solicitudes de reset o con `npm run db:cleanup-expired`.
 
 ### `Court`
 
@@ -42,6 +46,7 @@ Estados de reserva:
 - Hay índices para búsquedas por pista/fecha y usuario/fecha.
 - PostgreSQL impide reservas activas solapadas en la misma pista mediante una restricción `EXCLUDE`.
 - La migración añade una comprobación de que `endsAt` sea posterior a `startsAt`.
+- Las tablas `Session` y `PasswordResetToken` tienen índices por usuario y expiración para consulta y limpieza.
 
 ## Migraciones
 
@@ -77,6 +82,7 @@ ADMIN_PASSWORD="una-contrasena-de-al-menos-12-caracteres"
 ```
 
 Crea o actualiza tres pistas, un administrador y tres clientes de demostración, además de reservas de ejemplo.
+La semilla vuelve a establecer el hash de contraseña de sus cuentas demo cuando se ejecuta; úsala solo en bases de desarrollo.
 
 ## Copias y producción
 

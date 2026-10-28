@@ -2,6 +2,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { PrismaClient, ReservationStatus, UserRole } from "../src/generated/prisma/client";
 import { hashPassword } from "../src/lib/password";
+import { logSanitizedError } from "../src/lib/safe-log";
 
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -45,4 +46,4 @@ async function main() {
   ], skipDuplicates: true });
 }
 
-main().then(() => prisma.$disconnect()).catch(async (error) => { console.error(error); await prisma.$disconnect(); process.exit(1); });
+main().then(() => prisma.$disconnect()).catch(async (error) => { logSanitizedError("No se pudo ejecutar la semilla.", error); await prisma.$disconnect(); process.exit(1); });

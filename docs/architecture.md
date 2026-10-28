@@ -24,11 +24,11 @@ src/app/page.tsx
 
 ### Presentación
 
-`src/app/page.tsx` es un componente cliente. Gestiona el estado visual, los formularios y la navegación de la pantalla principal. Las llamadas remotas se realizan mediante `src/lib/client-api.ts`, que evita duplicar URLs, cabeceras y lectura de errores.
+`src/app/page.tsx` compone la sesión activa, selección de fecha y navegación principal. El acceso/recuperación, administración de clientes, formulario de reservas y board de agenda están separados en `src/app/components/`. El hook `src/app/hooks/use-schedule.ts` aísla carga, cancelación y refresco de agenda. Los componentes presentan datos y emiten acciones mediante props; no acceden directamente a Prisma ni contienen reglas de autorización.
 
 ### API
 
-Las rutas de `src/app/api` validan la entrada, comprueban permisos y coordinan las operaciones de dominio. Las respuestas de error usan `src/lib/http.ts` para mantener un contrato JSON uniforme.
+Las rutas de `src/app/api` son adaptadores HTTP: parsean y validan la entrada, comprueban permisos y traducen resultados de aplicación a status JSON. Las reglas con persistencia están en `src/lib/*-use-cases.ts`; las respuestas y logs sanitizados usan `src/lib/http.ts` y `src/lib/safe-log.ts`.
 
 Principales áreas:
 
@@ -41,6 +41,13 @@ Principales áreas:
 ### Dominio compartido
 
 - `src/lib/auth.ts`: sesiones y autorización por rol.
+- `src/lib/reservation-use-cases.ts`: reglas de creación de reservas, validación de recursos y conflictos PostgreSQL, separadas del contrato HTTP.
+- `src/lib/user-use-cases.ts`: alta/actualización de usuarios, protección del último administrador, hash de contraseña y revocación de sesiones.
+- `src/app/components/login-screen.tsx`: acceso y recuperación de contraseña.
+- `src/app/components/clients-panel.tsx`: CRUD de clientes desde el rol administrador.
+- `src/app/components/reservation-form.tsx`: presentación y lectura del formulario de reserva; delega el caso de uso al padre.
+- `src/app/components/schedule-board.tsx`: presentación de fechas, pistas, reservas y acciones por callbacks.
+- `src/app/hooks/use-schedule.ts`: carga asíncrona de agenda con cancelación de actualizaciones obsoletas.
 - `src/lib/password.ts`: hash PBKDF2, verificación y transición desde hashes `bcrypt` y `scrypt` heredados.
 - `src/lib/club-time.ts`: conversión entre hora local del club y UTC.
 - `src/lib/http.ts`: utilidades HTTP comunes.
@@ -52,14 +59,15 @@ Principales áreas:
 
 ## Principios SOLID aplicados
 
-- **Responsabilidad única:** UI, cliente HTTP, autenticación, tiempo del club y persistencia tienen fronteras separadas.
+- **Responsabilidad única:** página, componentes, hook de agenda, cliente HTTP, casos de uso, autorización y persistencia tienen fronteras explícitas.
 - **Abierto/cerrado:** nuevos endpoints pueden reutilizar `readJson`, `errorResponse` y el cliente API sin modificar su implementación.
 - **Sustitución:** los contratos del cliente exponen tipos de respuesta estables frente a la implementación concreta de `fetch`.
 - **Segregación:** el cliente API separa operaciones de autenticación, agenda, usuarios y reservas.
-- **Inversión de dependencias:** la UI depende del contrato `api`, no de URLs ni detalles de `fetch`.
+- **Inversión de dependencias:** los componentes emiten acciones mediante callbacks; la capa de aplicación depende de contratos tipados y no de URLs o detalles de `fetch`.
 
 ## Decisiones
 
 - Las fechas se almacenan en PostgreSQL como `DateTime` y se convierten usando la zona `Europe/Madrid`.
 - La autorización se comprueba siempre en el servidor; ocultar controles en React no es una medida de seguridad.
 - La agenda de clientes omite el identificador de reservas ajenas y anonimiza su titular y detalles privados; sus claves visuales usan la hora de inicio.
+- PostgreSQL es la autoridad final frente a carreras de reservas: la restricción de exclusión se traduce a un conflicto de dominio y la ruta responde `409`.

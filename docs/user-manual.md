@@ -2,11 +2,11 @@
 
 ## 1. Acceso
 
-1. Abre la aplicación en `https://localhost:3000`.
+1. En desarrollo local, abre `https://localhost:3000` y acepta el aviso del certificado de desarrollo; en producción usa el dominio HTTPS indicado por el administrador.
 2. Introduce tu correo electrónico y contraseña.
 3. Pulsa **Entrar**.
 
-Si las credenciales no son correctas, aparecerá un mensaje de error. Después de varios intentos fallidos puede ser necesario esperar unos minutos.
+Si las credenciales no son correctas, aparecerá un mensaje de error. Se permiten hasta cinco fallos por email dentro de una ventana de 15 minutos; después hay que esperar al reinicio de la ventana. También se limita el total de intentos por IP.
 
 Las credenciales iniciales de desarrollo son las definidas mediante `ADMIN_EMAIL` y `ADMIN_PASSWORD` antes de ejecutar la semilla. No compartas estas credenciales ni las uses en producción.
 

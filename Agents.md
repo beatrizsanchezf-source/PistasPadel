@@ -2,51 +2,29 @@
 
 ## Proyecto
 
-Pistas Padel San Cristobal de Segovia es una aplicación Next.js 16 con React 19 y TypeScript para gestionar pistas de pádel, usuarios, reservas e iluminación. La interfaz está en español.
+Pistas Padel San Cristobal de Segovia es una aplicación Next.js 16, React 19 y TypeScript para gestionar pistas de pádel, usuarios, reservas e iluminación. La interfaz y los mensajes visibles están en español. Usa PostgreSQL con Prisma 7; `DATABASE_URL` configura la conexión.
 
-## Estructura relevante
+## Reglas comunes
 
-- `src/app/page.tsx`: pantalla principal y componentes de interfaz cliente.
-- `src/app/api/`: rutas API de Next.js.
-- `src/lib/prisma.ts`: cliente Prisma compartido.
-- `prisma/schema.prisma`: modelos y enumeraciones de PostgreSQL.
-- `prisma/migrations/`: migraciones versionadas.
-- `prisma/seed.ts`: datos iniciales para desarrollo.
+- Usa el alias `@/` para importaciones desde `src/`.
+- No añadas secretos ni archivos `.env` al control de versiones; conserva `.env.example` sin credenciales reales.
+- No edites manualmente `src/generated/prisma/`; regenera el cliente con `npm run db:generate`.
+- Evita nuevas dependencias si la funcionalidad puede resolverse con las existentes.
+- Mantén los cambios enfocados y conserva el comportamiento existente fuera del alcance solicitado.
+- Antes de cambiar APIs de Next.js, consulta la guía local correspondiente en `node_modules/next/dist/docs/`.
+- Para funcionalidades o cambios de comportamiento relevantes, usa por defecto SDD híbrido y automático según [Desarrollo guiado por especificaciones](.github/skills/spec-driven-development/SKILL.md). Omítelo para cambios triviales, mecánicos o solo documentales.
 
-## Datos y Prisma
+## Skills del proyecto
 
-- La base de datos es PostgreSQL y la conexión se obtiene de `DATABASE_URL`.
-- No añadas credenciales ni archivos `.env` al control de versiones.
-- Tras modificar `prisma/schema.prisma`, genera una migración con `npm run db:migrate -- --name <descripcion>`.
-- Regenera el cliente Prisma con `npm run db:generate` si el cambio de esquema lo requiere.
-- Mantén actualizada la semilla cuando un cambio de modelo necesite datos de desarrollo.
-- `ReservationStatus` admite `PENDING`, `CONFIRMED` y `CANCELLED`.
-
-## Convenciones de implementación
-
-- Usa el alias `@/` para importar desde `src`.
-- Las rutas API validan los datos de entrada y devuelven errores JSON con el código HTTP adecuado.
-- Reutiliza `prisma` desde `@/lib/prisma`; no crees clientes Prisma por solicitud.
-- Conserva la interfaz y los textos en español.
-- Evita introducir librerías si la funcionalidad puede resolverse con las dependencias existentes.
-- Mantén los cambios pequeños y no modifiques archivos generados en `src/generated/prisma` manualmente.
-
-## Comandos
-
-```powershell
-npm run dev
-npm run lint
-npm run build
-npm run db:migrate -- --name <descripcion>
-npm run db:generate
-npm run db:seed
-```
-
-## Verificación
-
-- Ejecuta `npm run lint` después de cambios de código.
-- Ejecuta `npm run build` antes de dar por finalizado un cambio relevante.
-- Si se modifica la base de datos, aplica la migración y verifica la ruta o pantalla afectada con datos reales.
+- Base de datos y migraciones: [Prisma y PostgreSQL](.github/skills/prisma-postgres/SKILL.md).
+- Endpoints, autorización, validación y rate limits: [API y seguridad](.github/skills/api-security/SKILL.md).
+- Login, sesiones, PBKDF2 y recuperación: [Autenticación](.github/skills/authentication/SKILL.md).
+- Reservas, agenda, concurrencia y privacidad: [Reservas y agenda](.github/skills/reservations-schedule/SKILL.md).
+- Componentes React y experiencia de usuario: [Interfaz](.github/skills/frontend/SKILL.md).
+- Capas, casos de uso y SOLID: [Arquitectura](.github/skills/architecture/SKILL.md).
+- Unit, integración, E2E y verificación: [Pruebas y CI](.github/skills/testing-ci/SKILL.md).
+- Variables, despliegue, backups y documentación: [Operación y documentación](.github/skills/operations-docs/SKILL.md).
+- Especificación automática, modo híbrido y criterios verificables: [Desarrollo guiado por especificaciones](.github/skills/spec-driven-development/SKILL.md).
 
 <!-- BEGIN:nextjs-agent-rules -->
 

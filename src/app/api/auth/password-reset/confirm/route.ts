@@ -4,13 +4,15 @@ import { NextRequest } from "next/server";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { errorResponse, isRecord, readJson } from "@/lib/http";
+import { containsUnsafeText } from "@/lib/user-validation";
+import { logSanitizedError } from "@/lib/safe-log";
 
 export async function POST(request: NextRequest) {
   const body = await readJson<unknown>(request);
-  if (!isRecord(body) || typeof body.token !== "string" || typeof body.password !== "string") {
+  if (!isRecord(body) || typeof body.token !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(body.token) || typeof body.password !== "string") {
     return errorResponse("El enlace o la contraseña no son válidos.", 400);
   }
-  if (body.password.length < 12 || body.password.length > 128) {
+  if (body.password.length < 12 || body.password.length > 128 || containsUnsafeText(body.password)) {
     return errorResponse("La contraseña debe tener entre 12 y 128 caracteres.", 400);
   }
 
@@ -32,7 +34,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && (error.message === "INVALID_RESET_TOKEN" || (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034"))) {
       return errorResponse("El enlace ha caducado o ya se ha utilizado. Solicita uno nuevo.", 400);
     }
-    console.error("No se pudo restablecer la contraseña.", error);
+    logSanitizedError("No se pudo restablecer la contraseña.", error);
     return errorResponse("No se pudo restablecer la contraseña.", 500);
   }
 

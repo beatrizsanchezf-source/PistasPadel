@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "engram": {
+      "command": "${USERPROFILE}\\bin\\engram.exe",
+      "args": [
+        "mcp",
+        "--project=pistas-padel",
+        "--tools=agent"
+      ]
+    }
+  }
+}

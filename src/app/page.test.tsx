@@ -75,6 +75,7 @@ describe("Home", () => {
 
     await waitFor(() => expect(screen.getByRole("heading", { name: "Pista 1" })).toBeInTheDocument());
     expect(mockedApi.courts.schedule).toHaveBeenCalled();
+    expect(screen.queryByRole("link", { name: "Informes" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /María García/ })).toBeInTheDocument();
     expect(screen.getByText("Ocupación del día")).toBeInTheDocument();
   });

@@ -39,15 +39,12 @@ Si no lo solicitaste, ignora este mensaje.`,
     }),
   });
 
-  const result = await response.json();
+  const result = await response.json().catch(() => null) as { id?: unknown } | null;
 
   if (!response.ok) {
-    console.error("Error de Resend:", result);
-    throw new Error(
-      `Error enviando el correo: ${response.status} - ${
-        result.message ?? JSON.stringify(result)
-      }`
-    );
+    const deliveryError = new Error(`Resend rejected request (${response.status}).`);
+    Object.assign(deliveryError, { code: `RESEND_${response.status}` });
+    throw deliveryError;
   }
 
   return result;

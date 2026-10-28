@@ -3,7 +3,7 @@
 ## Requisitos
 
 - Node.js compatible con Next.js 16.
-- PostgreSQL accesible desde la máquina local.
+- PostgreSQL accesible desde la máquina local (o Docker Compose).
 - npm.
 
 ## Configuración
@@ -14,9 +14,9 @@
    npm install
    ```
 
-2. Copia `.env.example` a `.env` y configura `DATABASE_URL`, `ADMIN_EMAIL` y `ADMIN_PASSWORD`. Para activar la recuperación de contraseña, define además `APP_URL`, `RESEND_API_KEY` y `MAIL_FROM` con una cuenta de Resend y un remitente verificado.
+2. Copia `.env.example` a `.env` y configura `DATABASE_URL`, `ADMIN_EMAIL` y `ADMIN_PASSWORD`. Para activar la recuperación define `APP_URL`, `RESEND_API_KEY` y un `MAIL_FROM` de dominio verificado en Resend. En producción configura Upstash con `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN`, y confirma que el balanceador sobrescriba la cabecera indicada por `TRUSTED_CLIENT_IP_HEADER`.
 
-3. Inicia PostgreSQL local con Docker Compose (solo base de datos; la app corre con Node en el host):
+3. Inicia PostgreSQL local con Docker Compose (solo base de datos; la aplicación corre con Node en el host):
 
    ```powershell
    docker compose up -d postgres
@@ -42,11 +42,23 @@
 
 La contraseña `postgres` que usa `compose.yaml` por defecto es solo para desarrollo local. Sobrescríbela mediante `POSTGRES_PASSWORD` si el puerto o las credenciales locales difieren.
 
+La prueba de concurrencia con PostgreSQL usa una base desechable:
+
+```powershell
+npm run test:integration
+```
+
+En producción, programa `npm run db:cleanup-expired` diariamente con el scheduler del proveedor o cron. Ejemplo de crontab (03:15 UTC), ejecutado desde el directorio del release:
+
+```cron
+15 3 * * * cd /srv/pistas-padel/current && npm run db:cleanup-expired >> /var/log/pistas-padel-cleanup.log 2>&1
+```
+
 ## Comandos
 
 | Comando | Uso |
 | --- | --- |
-| `npm run dev` | Servidor HTTPS de desarrollo en `https://localhost:3000`. |
+| `npm run dev` | Servidor HTTPS de desarrollo en `https://localhost:3000`, con certificado local. |
 | `npm run build` | Compilación de producción. |
 | `npm run start` | Ejecuta la compilación de producción. |
 | `npm run lint` | Comprueba ESLint. |
@@ -57,6 +69,8 @@ La contraseña `postgres` que usa `compose.yaml` por defecto es solo para desarr
 | `npm run db:generate` | Regenera el cliente Prisma. |
 | `npm run db:migrate -- --name <nombre>` | Crea y aplica una migración local. |
 | `npm run db:deploy` | Aplica migraciones existentes, recomendado para despliegue. |
+| `npm run db:cleanup-expired` | Borra sesiones, tokens de reset e intentos de login expirados. |
+| `npm run test:integration` | Prueba concurrencia de reservas contra PostgreSQL. |
 | `npm run db:seed` | Carga datos de demostración en desarrollo. |
 
 ## Flujo antes de integrar cambios
@@ -73,7 +87,7 @@ La primera vez que ejecutes Playwright instala Chromium:
 npx playwright install chromium
 ```
 
-El servidor de desarrollo usa `certificates/localhost.pem` y `certificates/localhost-key.pem`. Si no existen, créalos con el `mkcert` descargado por Next.js o usa el certificado local de tu entorno. El navegador puede mostrar un aviso porque el certificado no procede de una autoridad pública; en desarrollo local puedes aceptarlo. Playwright usa `ignoreHTTPSErrors: true` para poder ejecutar las pruebas con ese certificado.
+El servidor de desarrollo usa `certificates/localhost.pem` y `certificates/localhost-key.pem`, ignorados por Git. Si no existen, créalos con `mkcert localhost 127.0.0.1 ::1` o genera certificados de desarrollo para localhost; no reutilices estos certificados en producción. En producción, termina TLS en el proxy/load balancer y configura `APP_URL` con el dominio HTTPS público.
 
 ## Trace viewer de Playwright
 
@@ -121,4 +135,6 @@ Consulta primero la terminal de Next.js. Un `response.json()` fallará si una ru
 
 ### Límite de peticiones
 
-Las rutas `/api/*` aceptan hasta 60 peticiones por minuto y por IP. Si se supera el límite, la aplicación responde con `429`. En despliegues con varias instancias, sustituye el almacenamiento en memoria de `src/proxy.ts` por Redis u otro almacén compartido.
+Rate limits de desarrollo (ventana fija de 60 segundos, por IP): API general `60`, login `10` y endpoints de recuperación `5` en conjunto. El login también registra hasta 5 fallos por email durante 15 minutos; la recuperación permite una solicitud por cuenta cada minuto. El proxy usa memoria local en desarrollo, así que los contadores se reinician al reiniciar Node y no se comparten entre instancias.
+
+En producción, configura Upstash Redis REST y la cabecera `TRUSTED_CLIENT_IP_HEADER` del proxy. Redis debe estar disponible: sin él, las rutas API responden `503` en vez de aceptar peticiones sin límite. El balanceador debe sobrescribir la cabecera de IP confiable.
