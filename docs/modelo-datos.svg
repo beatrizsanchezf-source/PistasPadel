@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1040" viewBox="0 0 1500 1040" role="img" aria-labelledby="title description">
+  <title id="title">Modelo de datos de Pistas Padel</title>
+  <desc id="description">Diagrama entidad-relacion de User, Court, Reservation, Session, PasswordResetToken y LoginAttempt.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f4f6f2; }
+      .entity { fill: #ffffff; stroke: #234b3b; stroke-width: 2; }
+      .entity-head { fill: #234b3b; }
+      .entity-head-text { fill: #ffffff; font: 700 20px Arial, sans-serif; }
+      .field { fill: #18251f; font: 15px Consolas, monospace; }
+      .muted { fill: #66756d; font: 13px Arial, sans-serif; }
+      .relation { fill: none; stroke: #50806b; stroke-width: 2.5; }
+      .cardinality { fill: #234b3b; font: 700 14px Arial, sans-serif; }
+      .note { fill: #edf2e8; stroke: #a9bc8f; stroke-width: 1.5; }
+      .note-text { fill: #263a2d; font: 15px Arial, sans-serif; }
+      .title { fill: #18251f; font: 700 30px Arial, sans-serif; }
+      .subtitle { fill: #66756d; font: 16px Arial, sans-serif; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#50806b" />
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1500" height="1040" />
+  <text class="title" x="60" y="58">Modelo de datos</text>
+  <text class="subtitle" x="60" y="88">Pistas Padel San Cristobal de Segovia | PostgreSQL + Prisma</text>
+
+  <!-- Relationships are drawn behind the entity boxes. -->
+  <path class="relation" marker-end="url(#arrow)" d="M 480 260 H 555" />
+  <text class="cardinality" x="490" y="246">1</text>
+  <text class="cardinality" x="535" y="246">0..*</text>
+
+  <path class="relation" marker-end="url(#arrow)" d="M 1035 390 H 985" />
+  <text class="cardinality" x="1005" y="376">1</text>
+  <text class="cardinality" x="980" y="376">0..*</text>
+
+  <path class="relation" marker-end="url(#arrow)" d="M 270 420 V 500 H 275 V 555" />
+  <text class="cardinality" x="281" y="448">1</text>
+  <text class="cardinality" x="281" y="540">0..*</text>
+
+  <path class="relation" marker-end="url(#arrow)" d="M 440 420 V 490 H 740 V 555" />
+  <text class="cardinality" x="452" y="448">1</text>
+  <text class="cardinality" x="750" y="540">0..*</text>
+
+  <!-- User -->
+  <g>
+    <rect class="entity" x="60" y="120" width="420" height="300" rx="8" />
+    <path class="entity-head" d="M68 120 H472 Q480 120 480 128 V166 H60 V128 Q60 120 68 120Z" />
+    <text class="entity-head-text" x="82" y="151">User</text>
+    <text class="field" x="82" y="198">PK  id: String</text>
+    <text class="field" x="82" y="226">UQ  email: String</text>
+    <text class="field" x="82" y="254">    name: String</text>
+    <text class="field" x="82" y="282">    phone: String?</text>
+    <text class="field" x="82" y="310">    passwordHash: String?</text>
+    <text class="field" x="82" y="338">    role: UserRole</text>
+    <text class="field" x="82" y="366">    createdAt: DateTime</text>
+    <text class="muted" x="82" y="398">Roles: ADMIN | CUSTOMER</text>
+  </g>
+
+  <!-- Reservation -->
+  <g>
+    <rect class="entity" x="555" y="200" width="430" height="355" rx="8" />
+    <path class="entity-head" d="M563 200 H977 Q985 200 985 208 V246 H555 V208 Q555 200 563 200Z" />
+    <text class="entity-head-text" x="577" y="231">Reservation</text>
+    <text class="field" x="577" y="278">PK  id: String</text>
+    <text class="field" x="577" y="306">FK  courtId: Int</text>
+    <text class="field" x="577" y="334">FK  userId: String</text>
+    <text class="field" x="577" y="362">    startsAt: DateTime</text>
+    <text class="field" x="577" y="390">    endsAt: DateTime</text>
+    <text class="field" x="577" y="418">    players: Int</text>
+    <text class="field" x="577" y="446">    withLight: Boolean</text>
+    <text class="field" x="577" y="474">    status: ReservationStatus</text>
+    <text class="field" x="577" y="502">    notes: String?</text>
+    <text class="field" x="577" y="530">    createdAt: DateTime</text>
+  </g>
+
+  <!-- Court -->
+  <g>
+    <rect class="entity" x="1035" y="285" width="390" height="220" rx="8" />
+    <path class="entity-head" d="M1043 285 H1417 Q1425 285 1425 293 V331 H1035 V293 Q1035 285 1043 285Z" />
+    <text class="entity-head-text" x="1057" y="316">Court</text>
+    <text class="field" x="1057" y="365">PK  id: Int</text>
+    <text class="field" x="1057" y="393">UQ  name: String</text>
+    <text class="field" x="1057" y="421">    description: String</text>
+    <text class="field" x="1057" y="449">    lightsOn: Boolean</text>
+    <text class="muted" x="1057" y="479">Una pista tiene muchas reservas</text>
+  </g>
+
+  <!-- Session -->
+  <g>
+    <rect class="entity" x="60" y="555" width="420" height="225" rx="8" />
+    <path class="entity-head" d="M68 555 H472 Q480 555 480 563 V601 H60 V563 Q60 555 68 555Z" />
+    <text class="entity-head-text" x="82" y="586">Session</text>
+    <text class="field" x="82" y="635">PK  id: String</text>
+    <text class="field" x="82" y="663">UQ  token: String</text>
+    <text class="field" x="82" y="691">FK  userId: String</text>
+    <text class="field" x="82" y="719">    expiresAt: DateTime</text>
+    <text class="field" x="82" y="747">    createdAt: DateTime</text>
+  </g>
+
+  <!-- PasswordResetToken -->
+  <g>
+    <rect class="entity" x="555" y="635" width="430" height="205" rx="8" />
+    <path class="entity-head" d="M563 635 H977 Q985 635 985 643 V681 H555 V643 Q555 635 563 635Z" />
+    <text class="entity-head-text" x="577" y="666">PasswordResetToken</text>
+    <text class="field" x="577" y="715">PK  tokenHash: String</text>
+    <text class="field" x="577" y="743">FK  userId: String</text>
+    <text class="field" x="577" y="771">    expiresAt: DateTime</text>
+    <text class="field" x="577" y="799">    createdAt: DateTime</text>
+    <text class="muted" x="577" y="824">Guarda el hash, no el token enviado</text>
+  </g>
+
+  <!-- LoginAttempt -->
+  <g>
+    <rect class="entity" x="1035" y="635" width="390" height="205" rx="8" />
+    <path class="entity-head" d="M1043 635 H1417 Q1425 635 1425 643 V681 H1035 V643 Q1035 635 1043 635Z" />
+    <text class="entity-head-text" x="1057" y="666">LoginAttempt</text>
+    <text class="field" x="1057" y="715">PK  email: String</text>
+    <text class="field" x="1057" y="743">    count: Int</text>
+    <text class="field" x="1057" y="771">    resetAt: DateTime</text>
+    <text class="field" x="1057" y="799">    updatedAt: DateTime</text>
+    <text class="muted" x="1057" y="824">Contador independiente por email</text>
+  </g>
+
+  <rect class="note" x="60" y="885" width="1365" height="105" rx="8" />
+  <text class="note-text" x="85" y="920">Integridad de reservas: endsAt &gt; startsAt; una restricción EXCLUDE impide solapamientos activos</text>
+  <text class="note-text" x="85" y="951">en la misma pista. Las reservas CANCELLED no bloquean nuevos horarios. Las relaciones dependientes usan ON DELETE CASCADE.</text>
+</svg>

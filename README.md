@@ -105,7 +105,7 @@ Al copiar `.env.example` sin modificarlo y ejecutar `npm run db:seed` en desarro
 
 La semilla crea también `pablo@example.test` y `carlos@example.test`; comparten la contraseña definida en `ADMIN_PASSWORD`. Si cambias `ADMIN_EMAIL` o `ADMIN_PASSWORD` en `.env`, usa esos nuevos valores después de volver a ejecutar la semilla.
 
-**Estas credenciales solo sirven para una base local de desarrollo.** La semilla rechaza `NODE_ENV=production`; no uses esas credenciales ni datos de demostración en producción. La aplicación no proporciona actualmente un flujo productivo para crear la primera cuenta administradora; está documentado como bloqueo previo al go-live en [la guía de despliegue](docs/deployment.md).
+**Estas credenciales solo sirven para una base local de desarrollo.** La semilla rechaza `NODE_ENV=production`; no uses esas credenciales ni datos de demostración en producción.
 
 ## Estructura del proyecto
 
@@ -149,3 +149,15 @@ La semilla crea también `pablo@example.test` y `carlos@example.test`; comparten
 ```
 
 El cliente bajo `src/generated/prisma/` se regenera con `npm run db:generate`; no lo edites manualmente. Los directorios `.next/`, `node_modules/`, `coverage/`, `playwright-report/` y `test-results/` son generados y no forman parte del código fuente.
+
+## URL DE PRODUCCIÓN
+
+https://pistaspadel.onrender.com
+
+## Usuarios y contraseñas de prueba
+
+Administrador:  admin@example.test
+Clientes:       maria@example.test
+                pablo@example.test
+                carlos@example.test
+En desarrollo local, la contraseña se define mediante `ADMIN_PASSWORD` en `.env` antes de ejecutar la semilla. No se publica una contraseña para el servicio de producción.
