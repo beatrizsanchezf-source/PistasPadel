@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title description">
+  <title id="title">Arquitectura de Pistas Padel</title>
+  <desc id="description">Diagrama de arquitectura del monolito modular Next.js con interfaz, proxy, rutas API, casos de uso, Prisma, PostgreSQL, Upstash Redis, Resend y pruebas CI.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f3f6f2; }
+      .panel { fill: #ffffff; stroke: #d7e0d8; stroke-width: 1.5; }
+      .layer { fill: #e8f0e9; stroke: #8fac95; stroke-width: 1.5; }
+      .external { fill: #fff5e8; stroke: #d4a765; stroke-width: 1.5; }
+      .testing { fill: #eaf1f8; stroke: #86a7c5; stroke-width: 1.5; }
+      .title { fill: #1d3026; font: 700 30px Arial, sans-serif; }
+      .subtitle { fill: #68786e; font: 16px Arial, sans-serif; }
+      .head { fill: #204e39; }
+      .head-blue { fill: #315d7c; }
+      .head-gold { fill: #956322; }
+      .head-text { fill: #ffffff; font: 700 17px Arial, sans-serif; }
+      .body { fill: #203128; font: 15px Arial, sans-serif; }
+      .small { fill: #53655a; font: 13px Arial, sans-serif; }
+      .label { fill: #42644e; font: 700 13px Arial, sans-serif; }
+      .arrow { fill: none; stroke: #426c52; stroke-width: 2.5; marker-end: url(#arrow); }
+      .arrow-dash { fill: none; stroke: #987543; stroke-width: 2.2; stroke-dasharray: 8 6; marker-end: url(#arrow-gold); }
+      .arrow-blue { fill: none; stroke: #416f95; stroke-width: 2.2; marker-end: url(#arrow-bluehead); }
++    </style>
++    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#426c52"/></marker>
++    <marker id="arrow-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#987543"/></marker>
++    <marker id="arrow-bluehead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#416f95"/></marker>
++  </defs>
++
++  <rect class="bg" width="1600" height="1040"/>
++  <text class="title" x="60" y="60">Arquitectura de la aplicación</text>
++  <text class="subtitle" x="60" y="89">Monolito modular · Next.js App Router · PostgreSQL</text>
++
++  <rect class="panel" x="55" y="120" width="1490" height="620" rx="14"/>
++  <text class="label" x="80" y="153">APLICACIÓN NEXT.JS</text>
++
++  <!-- Request flow -->
++  <path class="arrow" d="M400 320 H465"/>
++  <path class="arrow" d="M675 320 H740"/>
++  <path class="arrow" d="M980 320 H1045"/>
++  <path class="arrow" d="M1260 320 H1325"/>
++
++  <!-- Presentation -->
++  <g>
++    <rect class="layer" x="85" y="220" width="315" height="200" rx="12"/>
++    <rect class="head" x="85" y="220" width="315" height="45" rx="12"/>
++    <path class="head" d="M85 250h315v15H85z"/>
++    <text class="head-text" x="108" y="250">Presentación</text>
++    <text class="body" x="108" y="298">Next.js + React</text>
++    <text class="body" x="108" y="326">Página principal y componentes</text>
++    <text class="body" x="108" y="354">Login · Agenda · Reservas</text>
++    <text class="body" x="108" y="382">Panel de clientes</text>
++    <text class="small" x="108" y="405">La interfaz emite acciones y muestra estado</text>
++  </g>
++
++  <!-- Security proxy -->
++  <g>
++    <rect class="external" x="465" y="220" width="210" height="200" rx="12"/>
++    <rect class="head-gold" x="465" y="220" width="210" height="45" rx="12"/>
++    <path class="head-gold" d="M465 250h210v15H465z"/>
++    <text class="head-text" x="488" y="250">Proxy</text>
++    <text class="body" x="488" y="298">CSP con nonce</text>
++    <text class="body" x="488" y="326">Cabeceras de seguridad</text>
++    <text class="body" x="488" y="354">Rate limit de API</text>
++    <text class="small" x="488" y="390">IP confiable desde el balanceador</text>
++  </g>
++
++  <!-- HTTP API -->
++  <g>
++    <rect class="layer" x="740" y="220" width="240" height="200" rx="12"/>
++    <rect class="head" x="740" y="220" width="240" height="45" rx="12"/>
++    <path class="head" d="M740 250h240v15H740z"/>
++    <text class="head-text" x="763" y="250">API HTTP</text>
++    <text class="body" x="763" y="298">Route Handlers</text>
++    <text class="body" x="763" y="326">Autenticación y roles</text>
++    <text class="body" x="763" y="354">Validación y errores JSON</text>
++    <text class="small" x="763" y="390">Adaptadores de entrada/salida</text>
++  </g>
++
++  <!-- Use cases -->
++  <g>
++    <rect class="layer" x="1045" y="220" width="215" height="200" rx="12"/>
++    <rect class="head" x="1045" y="220" width="215" height="45" rx="12"/>
++    <path class="head" d="M1045 250h215v15h-215z"/>
++    <text class="head-text" x="1068" y="250">Casos de uso</text>
++    <text class="body" x="1068" y="298">Reservas</text>
++    <text class="body" x="1068" y="326">Usuarios</text>
++    <text class="body" x="1068" y="354">Reglas y transacciones</text>
++    <text class="small" x="1068" y="390">Lógica separada de HTTP y UI</text>
++  </g>
++
++  <!-- Persistence -->
++  <g>
++    <rect class="testing" x="1325" y="220" width="190" height="200" rx="12"/>
++    <rect class="head-blue" x="1325" y="220" width="190" height="45" rx="12"/>
++    <path class="head-blue" d="M1325 250h190v15h-190z"/>
++    <text class="head-text" x="1348" y="250">Persistencia</text>
++    <text class="body" x="1348" y="298">Prisma 7</text>
++    <text class="body" x="1348" y="326">@prisma/adapter-pg</text>
++    <text class="body" x="1348" y="354">Pool PostgreSQL</text>
++    <text class="small" x="1348" y="390">Cliente compartido</text>
++  </g>
++
++  <!-- Main database and external services -->
++  <path class="arrow" d="M1420 420 V500"/>
++  <path class="arrow-dash" d="M570 420 V500"/>
++  <path class="arrow-dash" d="M870 420 V500"/>
++
++  <g>
++    <rect class="testing" x="1300" y="500" width="245" height="145" rx="12"/>
++    <rect class="head-blue" x="1300" y="500" width="245" height="44" rx="12"/>
++    <path class="head-blue" d="M1300 530h245v14h-245z"/>
++    <text class="head-text" x="1323" y="529">PostgreSQL 16</text>
++    <text class="body" x="1323" y="578">Usuarios · Pistas</text>
++    <text class="body" x="1323" y="605">Reservas · Sesiones</text>
++    <text class="small" x="1323" y="629">Restricción anti-solapamiento</text>
++  </g>
++
++  <g>
++    <rect class="external" x="465" y="500" width="210" height="145" rx="12"/>
++    <rect class="head-gold" x="465" y="500" width="210" height="44" rx="12"/>
++    <path class="head-gold" d="M465 530h210v14H465z"/>
++    <text class="head-text" x="488" y="529">Upstash Redis</text>
++    <text class="body" x="488" y="578">Rate limit distribuido</text>
++    <text class="body" x="488" y="605">REST sobre HTTPS</text>
++    <text class="small" x="488" y="629">Obligatorio en producción</text>
++  </g>
++
++  <g>
++    <rect class="external" x="740" y="500" width="240" height="145" rx="12"/>
++    <rect class="head-gold" x="740" y="500" width="240" height="44" rx="12"/>
++    <path class="head-gold" d="M740 530h240v14H740z"/>
++    <text class="head-text" x="763" y="529">Resend</text>
++    <text class="body" x="763" y="578">Correo de recuperación</text>
++    <text class="body" x="763" y="605">API HTTPS</text>
++    <text class="small" x="763" y="629">Servicio opcional</text>
++  </g>
++
++  <!-- Quality and delivery band -->
++  <rect class="panel" x="55" y="775" width="1490" height="205" rx="14"/>
++  <text class="label" x="80" y="810">CALIDAD Y DESPLIEGUE</text>
++  <path class="arrow-blue" d="M270 865 H455"/>
++  <path class="arrow-blue" d="M720 865 H905"/>
++  <path class="arrow-blue" d="M1170 865 H1355"/>
++
++  <g>
++    <rect class="testing" x="85" y="830" width="185" height="100" rx="10"/>
++    <text class="head-text" x="108" y="860" fill="#315d7c">Vitest</text>
++    <text class="small" x="108" y="889">Unitarias y componentes</text>
++    <text class="small" x="108" y="912">React Testing Library</text>
++  </g>
++  <g>
++    <rect class="testing" x="455" y="830" width="265" height="100" rx="10"/>
++    <text class="head-text" x="478" y="860" fill="#315d7c">Integración PostgreSQL</text>
++    <text class="small" x="478" y="889">Integridad y concurrencia</text>
++    <text class="small" x="478" y="912">Base de pruebas aislada</text>
++  </g>
++  <g>
++    <rect class="testing" x="905" y="830" width="265" height="100" rx="10"/>
++    <text class="head-text" x="928" y="860" fill="#315d7c">Playwright</text>
++    <text class="small" x="928" y="889">E2E con Chromium</text>
++    <text class="small" x="928" y="912">Flujos de usuario</text>
++  </g>
++  <g>
++    <rect class="testing" x="1355" y="830" width="160" height="100" rx="10"/>
++    <text class="head-text" x="1378" y="860" fill="#315d7c">GitHub Actions</text>
++    <text class="small" x="1378" y="889">Lint · tests · build</text>
++    <text class="small" x="1378" y="912">CI por cambios</text>
++  </g>
++
++  <text class="small" x="60" y="1015">Flujo principal: navegador → Next.js → proxy/API → casos de uso → Prisma → PostgreSQL</text>
++</svg>
